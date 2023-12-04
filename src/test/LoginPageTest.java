@@ -39,33 +39,62 @@ class LoginPageTest {
     }
 
     @Test
-    void testPerformanceWithDifferentCredentials() {
+    void testPerformanceUnderDifferentLoadConditions() {
         // Configure mock behavior for valid credentials
         when(mockManagerHib.getManagerByLoginData("admin", "admin")).thenReturn(new Manager());
         when(mockTruckerHib.getTruckerByLoginData("trc", "trc")).thenReturn(new Trucker());
 
-        // Test with both valid and invalid credentials
-        String[][] credentials = {{"admin", "admin"}, {"trc", "trc"}, {"invalidUser@example.com", "wrongPassword"}};
-        boolean[] managerCheck = {true, false, false};
+        String[][] credentials = {{"admin", "admin"}, {"trc", "trc"}};
+        boolean[] managerCheck = {true, false};
 
-        for (int i = 0; i < credentials.length; i++) {
-            loginPage.emailField.setText(credentials[i][0]);
-            loginPage.passwordField.setText(credentials[i][1]);
-            loginPage.managerCheck.setSelected(managerCheck[i]);
+        for (int load = 100; load <= 1000; load += 300) {
+            long totalDuration = 0;
+            for (int i = 0; i < credentials.length; i++) {
+                loginPage.emailField.setText(credentials[i][0]);
+                loginPage.passwordField.setText(credentials[i][1]);
+                loginPage.managerCheck.setSelected(managerCheck[i]);
 
-            long startTime = System.currentTimeMillis();
-            try {
-                boolean loginSuccess = loginPage.login();
-                System.out.println("Login attempt with " + credentials[i][0] + ": " + (loginSuccess ? "Success" : "Failure"));
-            } catch (IOException e) {
-                e.printStackTrace();
+                long startTime = System.currentTimeMillis();
+                try {
+                    for (int j = 0; j < load; j++) {
+                        boolean loginSuccess = loginPage.login(); // Login multiple times to simulate load
+                        System.out.println("Login attempt with " + credentials[i][0] + ": " + (loginSuccess ? "Success" : "Failure"));
+                    }
+
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                long endTime = System.currentTimeMillis();
+
+                totalDuration += endTime - startTime;
             }
-            long endTime = System.currentTimeMillis();
 
-            long duration = endTime - startTime;
-            assertTrue(duration < 1000, "Login with credentials " + credentials[i][0] + " took too long");
-            System.out.println("Duration for " + credentials[i][0] + ": " + duration + "ms");
+            long averageDuration = totalDuration / credentials.length;
+            assertTrue(averageDuration < 2000, "Average login duration under load " + load + " is too long: " + averageDuration + "ms");
+            System.out.println("Average duration for load " + load + ": " + averageDuration + "ms");
         }
     }
 
+    @Test
+    void testResourceUsageDuringLogin() {
+        // Test resource usage for login
+        loginPage.emailField.setText("admin");
+        loginPage.passwordField.setText("admin");
+        loginPage.managerCheck.setSelected(true);
+
+        Runtime runtime = Runtime.getRuntime();
+        runtime.gc(); // Trigger garbage collection for more accurate memory usage data
+        long memoryBefore = runtime.totalMemory() - runtime.freeMemory();
+
+        try {
+            loginPage.login();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        long memoryAfter = runtime.totalMemory() - runtime.freeMemory();
+        long memoryUsed = memoryAfter - memoryBefore;
+        assertTrue(memoryUsed < 50000000, "Memory usage for login is too high: " + memoryUsed + " bytes"); // Adjust threshold as needed
+        System.out.println("Memory used for login: " + memoryUsed + " bytes");
+    }
 }

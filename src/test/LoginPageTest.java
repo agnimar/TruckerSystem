@@ -40,71 +40,72 @@ class LoginPageTest {
         loginPage.managerCheck = new CheckBox();
     }
 
-    @Test
-    void testPerformanceUnderDifferentLoadConditions() {
-        // Configure mock behavior for valid credentials
-        when(mockManagerHib.getManagerByLoginData("admin", "admin")).thenReturn(new Manager());
-        when(mockTruckerHib.getTruckerByLoginData("trc", "trc")).thenReturn(new Trucker());
-
-        String[][] credentials = {{"admin", "admin"}, {"trc", "trc"}};
-        boolean[] managerCheck = {true, false};
-
-        for (int load = 100; load <= 1000; load += 300) {
-            long totalDuration = 0;
-            for (int i = 0; i < credentials.length; i++) {
-                loginPage.emailField.setText(credentials[i][0]);
-                loginPage.passwordField.setText(credentials[i][1]);
-                loginPage.managerCheck.setSelected(managerCheck[i]);
-
-                long startTime = System.currentTimeMillis();
-                try {
-                    for (int j = 0; j < load; j++) {
-                        boolean loginSuccess = loginPage.login(); // Login multiple times to simulate load
-                        System.out.println("Login attempt with " + credentials[i][0] + ": " + (loginSuccess ? "Success" : "Failure"));
-                    }
-
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-                long endTime = System.currentTimeMillis();
-
-                totalDuration += endTime - startTime;
-            }
-
-            long averageDuration = totalDuration / credentials.length;
-            assertTrue(averageDuration < 2000, "Average login duration under load " + load + " is too long: " + averageDuration + "ms");
-            System.out.println("Average duration for load " + load + ": " + averageDuration + "ms");
-        }
+    @ParameterizedTest
+    @ValueSource(ints = {100, 500, 2500}) // Load levels
+    void testDurationUnderLoad(int load) {
+        // Test for both manager and trucker for each load
+        performLoadTest(load, true); // Test with manager
+        performLoadTest(load, false); // Test with trucker
     }
 
-    @Test
-    void testResourceUsageDuringLogin() {
-        // Test resource usage for login
-        loginPage.emailField.setText("admin");
-        loginPage.passwordField.setText("admin");
-        loginPage.managerCheck.setSelected(true);
+    @ParameterizedTest
+    @ValueSource(ints = {100, 500, 2500}) // Load levels
+    void testMemoryUsageUnderLoad(int load) {
+        // Test for both manager and trucker for each load
+        performMemoryTest(load, true); // Test with manager
+        performMemoryTest(load, false); // Test with trucker
+    }
 
+    private void performLoadTest(int load, boolean isManager) {
+        // Setup for test
+        setupTestEnvironment(isManager);
+
+        // Duration test
+        long startTime = System.currentTimeMillis();
+        try {
+            for (int j = 0; j < load; j++) {
+                loginPage.login();
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        long endTime = System.currentTimeMillis();
+
+        // Assertions and logging for duration
+        long duration = endTime - startTime;
+        long expectedMaxDuration = isManager ? 2500 : 1500;
+        assertTrue(duration < expectedMaxDuration, "Login duration under load " + load + " for " + (isManager ? "manager" : "trucker") + " is too long: " + duration + "ms");
+
+        System.out.println("Load: " + load + " for " + (isManager ? "manager" : "trucker") + ", Duration: " + duration + "ms");
+    }
+
+    private void performMemoryTest(int load, boolean isManager) {
+        // Setup for test
+        setupTestEnvironment(isManager);
+
+        // Memory usage test
         Runtime runtime = Runtime.getRuntime();
-        runtime.gc(); // Trigger garbage collection for more accurate memory usage data
+        runtime.gc();
         long memoryBefore = runtime.totalMemory() - runtime.freeMemory();
 
         try {
-            loginPage.login();
+            for (int j = 0; j < load; j++) {
+                loginPage.login();
+            }
         } catch (IOException e) {
             e.printStackTrace();
         }
 
         long memoryAfter = runtime.totalMemory() - runtime.freeMemory();
-        long memoryUsed = memoryAfter - memoryBefore;
-        assertTrue(memoryUsed < 50000000, "Memory usage for login is too high: " + memoryUsed + " bytes"); // Adjust threshold as needed
-        System.out.println("Memory used for login: " + memoryUsed + " bytes");
+        long memoryUsedBytes = memoryAfter - memoryBefore;
+        double memoryUsedMB = memoryUsedBytes / 1048576.0; // Convert bytes to MB
+        double expectedMaxMemoryMB = (isManager ? 100000000 : 75000000) / 1048576.0; // Convert expected max memory to MB
+        assertTrue(memoryUsedMB < expectedMaxMemoryMB, "Memory usage under load " + load + " for " + (isManager ? "manager" : "trucker") + " is too high: " + memoryUsedMB + " MB");
+
+        System.out.println("Load: " + load + " for " + (isManager ? "manager" : "trucker") + ", Memory Used: " + String.format("%.2f MB", memoryUsedMB));
     }
 
-    @ParameterizedTest
-    @ValueSource(ints = {100, 500, 2500, 500}) // Updated load levels
-    void testPerformanceUnderLoad(int load) {
-        // Determine user type based on load
-        boolean isManager = (load == 500);
+    private void setupTestEnvironment(boolean isManager) {
         String[] credentials = isManager ? new String[]{"admin", "admin"} : new String[]{"trc", "trc"};
 
         // Configure mock behavior
@@ -118,39 +119,5 @@ class LoginPageTest {
         loginPage.emailField.setText(credentials[0]);
         loginPage.passwordField.setText(credentials[1]);
         loginPage.managerCheck.setSelected(isManager);
-
-        // Performance test
-        long startTime = System.currentTimeMillis();
-        try {
-            for (int j = 0; j < load; j++) {
-                loginPage.login();
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        long endTime = System.currentTimeMillis();
-
-        // Assertions and logging for performance
-        long duration = endTime - startTime;
-        long expectedMaxDuration = isManager ? 2500 : 1500; // Adjust thresholds as needed
-        assertTrue(duration < expectedMaxDuration, "Login duration under load " + load + " is too long: " + duration + "ms");
-
-        // Memory usage test
-        Runtime runtime = Runtime.getRuntime();
-        runtime.gc();
-        long memoryBefore = runtime.totalMemory() - runtime.freeMemory();
-
-        try {
-            loginPage.login();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-        long memoryAfter = runtime.totalMemory() - runtime.freeMemory();
-        long memoryUsed = memoryAfter - memoryBefore;
-        long expectedMaxMemory = isManager ? 100000000 : 75000000; // Adjust as needed
-        assertTrue(memoryUsed < expectedMaxMemory, "Memory usage for login is too high: " + memoryUsed + " bytes");
-
-        System.out.println("Load: " + load + ", Duration: " + duration + "ms, Memory Used: " + memoryUsed + " bytes");
     }
 }

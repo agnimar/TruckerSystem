@@ -28,6 +28,7 @@ public class LoginPage {
     private EntityManagerFactory entityManagerFactory;
     public ManagerHib managerHib;
     public TruckerHib truckerHib;
+    private boolean isTestEnvironment = false;
 
     public LoginPage() {
         this.entityManagerFactory = Persistence.createEntityManagerFactory("TruckSystem");
@@ -36,39 +37,51 @@ public class LoginPage {
     }
 
     // For testing purposes
-    public LoginPage(ManagerHib managerHib, TruckerHib truckerHib) {
+    public LoginPage(ManagerHib managerHib, TruckerHib truckerHib, boolean isTestEnvironment) {
         this.managerHib = managerHib;
         this.truckerHib = truckerHib;
+        this.isTestEnvironment = isTestEnvironment;
     }
 
     public boolean login() throws IOException {
         if (managerCheck.isSelected()) {
             Manager manager = managerHib.getManagerByLoginData(emailField.getText(), passwordField.getText());
             if (manager != null) {
-                navigate("../fxml/front-page.fxml");
+                if (!isTestEnvironment) {
+                    navigate("../fxml/front-page.fxml");
+                }
                 return true;
             } else {
-                FxUtils.generateAlert(Alert.AlertType.INFORMATION, "User login report", "No such user or wrong credentials");
+                if (!isTestEnvironment) {
+                    FxUtils.generateAlert(Alert.AlertType.INFORMATION, "User login report", "No such user or wrong credentials");
+                }
+                return false;
             }
         } else {
             Trucker trucker = truckerHib.getTruckerByLoginData(emailField.getText(), passwordField.getText());
             if (trucker != null) {
-                navigate("../fxml/front-page.fxml");
+                if (!isTestEnvironment) {
+                    navigate("../fxml/front-page.fxml");
+                }
                 return true;
             } else {
-                FxUtils.generateAlert(Alert.AlertType.INFORMATION, "User login report", "No such user or wrong credentials");
+                if (!isTestEnvironment) {
+                    FxUtils.generateAlert(Alert.AlertType.INFORMATION, "User login report", "No such user or wrong credentials");
+                }
+                return false;
             }
         }
-        return false;
     }
 
     private void navigate(String fxmlFile) throws IOException {
-        FXMLLoader fxmlLoader = new FXMLLoader(LoginPage.class.getResource(fxmlFile));
-        Parent parent = fxmlLoader.load();
-        Scene scene = new Scene(parent);
-        Stage stage = (Stage) passwordField.getScene().getWindow();
-        stage.setScene(scene);
-        stage.show();
+        if (passwordField.getScene() != null) {
+            FXMLLoader fxmlLoader = new FXMLLoader(LoginPage.class.getResource(fxmlFile));
+            Parent parent = fxmlLoader.load();
+            Scene scene = new Scene(parent);
+            Stage stage = (Stage) passwordField.getScene().getWindow();
+            stage.setScene(scene);
+            stage.show();
+        }
     }
     public void signUp() throws IOException {
         FXMLLoader fxmlLoader = new FXMLLoader(LoginPage.class.getResource("../fxml/sign-up-page.fxml"));

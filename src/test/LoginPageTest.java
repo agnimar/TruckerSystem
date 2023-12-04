@@ -5,7 +5,6 @@ import fxControllers.LoginPage;
 import hibernate.ManagerHib;
 import hibernate.TruckerHib;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 import javafx.scene.control.TextField;
 import javafx.scene.control.PasswordField;
@@ -23,10 +22,8 @@ import org.junit.jupiter.params.provider.ValueSource;
 
 class LoginPageTest {
     private LoginPage loginPage;
-
     @Mock
     private ManagerHib mockManagerHib;
-
     @Mock
     private TruckerHib mockTruckerHib;
 
@@ -40,10 +37,24 @@ class LoginPageTest {
         loginPage.managerCheck = new CheckBox();
     }
 
+    private void setupTestEnvironment(boolean isManager) {
+        String[] credentials = isManager ? new String[]{"admin", "admin"} : new String[]{"trc", "trc"};
+
+        // Configure mock behavior
+        if (isManager) {
+            when(mockManagerHib.getManagerByLoginData("admin", "admin")).thenReturn(new Manager());
+        } else {
+            when(mockTruckerHib.getTruckerByLoginData("trc", "trc")).thenReturn(new Trucker());
+        }
+
+        loginPage.emailField.setText(credentials[0]);
+        loginPage.passwordField.setText(credentials[1]);
+        loginPage.managerCheck.setSelected(isManager);
+    }
+
     @ParameterizedTest
     @ValueSource(ints = {100, 500, 2500}) // Load levels
     void testDurationUnderLoad(int load) {
-        // Test for both manager and trucker for each load
         performLoadTest(load, true); // Test with manager
         performLoadTest(load, false); // Test with trucker
     }
@@ -51,7 +62,6 @@ class LoginPageTest {
     @ParameterizedTest
     @ValueSource(ints = {100, 500, 2500}) // Load levels
     void testMemoryUsageUnderLoad(int load) {
-        // Test for both manager and trucker for each load
         performMemoryTest(load, true); // Test with manager
         performMemoryTest(load, false); // Test with trucker
     }
@@ -74,6 +84,7 @@ class LoginPageTest {
         // Assertions and logging for duration
         long duration = endTime - startTime;
         long expectedMaxDuration = isManager ? 2500 : 1500;
+        //Assert
         assertTrue(duration < expectedMaxDuration, "Login duration under load " + load + " for " + (isManager ? "manager" : "trucker") + " is too long: " + duration + "ms");
 
         System.out.println("Load: " + load + " for " + (isManager ? "manager" : "trucker") + ", Duration: " + duration + "ms");
@@ -100,24 +111,10 @@ class LoginPageTest {
         long memoryUsedBytes = memoryAfter - memoryBefore;
         double memoryUsedMB = memoryUsedBytes / 1048576.0; // Convert bytes to MB
         double expectedMaxMemoryMB = (isManager ? 100000000 : 75000000) / 1048576.0; // Convert expected max memory to MB
+
+        //Assert
         assertTrue(memoryUsedMB < expectedMaxMemoryMB, "Memory usage under load " + load + " for " + (isManager ? "manager" : "trucker") + " is too high: " + memoryUsedMB + " MB");
 
         System.out.println("Load: " + load + " for " + (isManager ? "manager" : "trucker") + ", Memory Used: " + String.format("%.2f MB", memoryUsedMB));
-    }
-
-    private void setupTestEnvironment(boolean isManager) {
-        String[] credentials = isManager ? new String[]{"admin", "admin"} : new String[]{"trc", "trc"};
-
-        // Configure mock behavior
-        if (isManager) {
-            when(mockManagerHib.getManagerByLoginData("admin", "admin")).thenReturn(new Manager());
-        } else {
-            when(mockTruckerHib.getTruckerByLoginData("trc", "trc")).thenReturn(new Trucker());
-        }
-
-        // Set credentials and manager check
-        loginPage.emailField.setText(credentials[0]);
-        loginPage.passwordField.setText(credentials[1]);
-        loginPage.managerCheck.setSelected(isManager);
     }
 }

@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.CheckBox?>
+<?import javafx.scene.control.DatePicker?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.AnchorPane?>
+
+<AnchorPane prefHeight="544.0" prefWidth="290.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="fxControllers.CreateTrucker">
+   <children>
+      <Button fx:id="createButton" layoutX="118.0" layoutY="474.0" mnemonicParsing="false" onAction="#createTrucker" text="Create" />
+      <TextField fx:id="passwordField" layoutX="69.0" layoutY="50.0" promptText="Password" />
+      <TextField fx:id="nameField" layoutX="70.0" layoutY="99.0" promptText="First name" />
+      <TextField fx:id="lastnameField" layoutX="70.0" layoutY="148.0" promptText="Last name" />
+      <TextField fx:id="phoneField" layoutX="69.0" layoutY="196.0" promptText="Phone number" />
+      <DatePicker fx:id="birthField" layoutX="58.0" layoutY="295.0" promptText="Date of birth" />
+      <TextField fx:id="emailField" layoutX="70.0" layoutY="245.0" promptText="Email" />
+      <CheckBox fx:id="medicalField" layoutX="71.0" layoutY="391.0" mnemonicParsing="false" text="Have valid medical card" />
+      <CheckBox fx:id="driverField" layoutX="71.0" layoutY="432.0" mnemonicParsing="false" text="Have valid driver licence" />
+      <TextField fx:id="distanceField" layoutX="70.0" layoutY="344.0" promptText="Full driven distance" />
+   </children>
+</AnchorPane>

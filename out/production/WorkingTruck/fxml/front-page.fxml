@@ -1,0 +1,154 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ListView?>
+<?import javafx.scene.control.Tab?>
+<?import javafx.scene.control.TabPane?>
+<?import javafx.scene.control.TreeView?>
+<?import javafx.scene.layout.AnchorPane?>
+
+<?import javafx.scene.control.ChoiceBox?>
+<?import javafx.scene.control.DatePicker?>
+<?import javafx.scene.text.Text?>
+<?import javafx.scene.control.TextField?>
+<TabPane fx:id="allTabs" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="780.0" tabClosingPolicy="UNAVAILABLE" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="fxControllers.FrontPage">
+  <tabs>
+    <Tab text="Home">
+      <content>
+        <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+               <children>
+                  <Button layoutX="72.0" layoutY="93.0" mnemonicParsing="false" onAction="#signOut" prefHeight="25.0" prefWidth="105.0" text="Sign out" />
+                  <Button layoutX="72.0" layoutY="152.0" mnemonicParsing="false" onAction="#viewYourData" prefHeight="25.0" prefWidth="105.0" text="View your data" />
+                  <Button layoutX="72.0" layoutY="210.0" mnemonicParsing="false" onAction="#editYourData" prefHeight="25.0" prefWidth="105.0" text="Edit your data" />
+                  <Button layoutX="97.0" layoutY="516.0" mnemonicParsing="false" onAction="#refresh" text="Refresh" />
+               </children></AnchorPane>
+      </content>
+    </Tab>
+    <Tab fx:id="managerTab" text="Manager Management">
+      <content>
+        <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="452.0" prefWidth="600.0">
+               <children>
+                  <ListView fx:id="managerList" layoutX="256.0" layoutY="13.0" prefHeight="540.0" prefWidth="509.0" />
+                  <AnchorPane fx:id="managerPane" layoutX="27.0" layoutY="48.0" prefHeight="247.0" prefWidth="200.0">
+                     <children>
+                        <Button fx:id="viewManagerField" layoutX="54.0" layoutY="5.0" mnemonicParsing="false" onAction="#viewManager" prefHeight="25.0" prefWidth="105.0" text="View" />
+                        <Button fx:id="deleteManagerField" layoutX="54.0" layoutY="62.0" mnemonicParsing="false" onAction="#deleteManager" prefHeight="25.0" prefWidth="105.0" text="Delete" />
+                        <Button fx:id="updateManagerField" layoutX="54.0" layoutY="118.0" mnemonicParsing="false" onAction="#updateManager" prefHeight="25.0" prefWidth="105.0" text="Update" />
+                        <Button fx:id="createManagerField" layoutX="54.0" layoutY="174.0" mnemonicParsing="false" onAction="#createManager" prefHeight="25.0" prefWidth="105.0" text="Create" />
+                     </children>
+                  </AnchorPane>
+                  <Button layoutX="99.0" layoutY="510.0" mnemonicParsing="false" onAction="#refresh" text="Refresh" />
+               </children></AnchorPane>
+      </content>
+    </Tab>
+      <Tab fx:id="truckerTab" text="Trucker Management">
+        <content>
+          <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+               <children>
+                  <ListView fx:id="truckerList" layoutX="240.0" layoutY="16.0" prefHeight="540.0" prefWidth="509.0" />
+                  <AnchorPane fx:id="truckerPane" layoutX="29.0" layoutY="57.0" prefHeight="200.0" prefWidth="200.0">
+                     <children>
+                        <Button fx:id="viewTruckerField" layoutX="44.0" layoutY="2.0" mnemonicParsing="false" onAction="#viewTrucker" prefHeight="25.0" prefWidth="105.0" text="View" />
+                        <Button fx:id="updateTruckerField" layoutX="44.0" layoutY="115.0" mnemonicParsing="false" onAction="#updateTrucker" prefHeight="25.0" prefWidth="105.0" text="Update" />
+                        <Button fx:id="createTruckerField" layoutX="44.0" layoutY="171.0" mnemonicParsing="false" onAction="#createTrucker" prefHeight="25.0" prefWidth="105.0" text="Create" />
+                        <Button fx:id="deleteTruckerField" layoutX="44.0" layoutY="59.0" mnemonicParsing="false" onAction="#deleteTrucker" prefHeight="25.0" prefWidth="105.0" text="Delete" />
+                     </children>
+                  </AnchorPane>
+                  <Button layoutX="101.0" layoutY="514.0" mnemonicParsing="false" onAction="#refresh" text="Refresh" />
+               </children>
+            </AnchorPane>
+        </content>
+      </Tab>
+      <Tab fx:id="checkPointTab" text="CheckPoint Management">
+         <content>
+            <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="452.0" prefWidth="600.0">
+               <children>
+                  <ListView fx:id="checkPointList" layoutX="256.0" layoutY="13.0" prefHeight="540.0" prefWidth="509.0" />
+                  <AnchorPane fx:id="checkPointPane" layoutX="56.0" layoutY="71.0" prefHeight="200.0" prefWidth="200.0">
+                     <children>
+                        <Button fx:id="viewCheckPointField" layoutX="32.0" layoutY="4.0" mnemonicParsing="false" onAction="#viewCheckPoint" prefHeight="25.0" prefWidth="105.0" text="View" />
+                        <Button fx:id="deleteCheckPointField" layoutX="32.0" layoutY="61.0" mnemonicParsing="false" onAction="#deleteCheckPoint" prefHeight="25.0" prefWidth="105.0" text="Delete" />
+                        <Button fx:id="updateCheckPointField" layoutX="32.0" layoutY="117.0" mnemonicParsing="false" onAction="#updateCheckPoint" prefHeight="25.0" prefWidth="105.0" text="Update" />
+                        <Button fx:id="createCheckPointField" layoutX="32.0" layoutY="173.0" mnemonicParsing="false" onAction="#createCheckPoint" prefHeight="25.0" prefWidth="105.0" text="Create" />
+                     </children>
+                  </AnchorPane>
+                  <Button layoutX="112.0" layoutY="512.0" mnemonicParsing="false" onAction="#refresh" text="Refresh" />
+               </children>
+            </AnchorPane>
+         </content>
+      </Tab>
+      <Tab fx:id="cargoTab" text="Cargo Management">
+         <content>
+            <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="452.0" prefWidth="600.0">
+               <children>
+                  <Button fx:id="viewCargoField" layoutX="76.0" layoutY="58.0" mnemonicParsing="false" onAction="#viewCargo" prefHeight="25.0" prefWidth="105.0" text="View" />
+                  <Button fx:id="deleteCargoField" layoutX="76.0" layoutY="115.0" mnemonicParsing="false" onAction="#deleteCargo" prefHeight="25.0" prefWidth="105.0" text="Delete" />
+                  <Button fx:id="updateCargoField" layoutX="76.0" layoutY="171.0" mnemonicParsing="false" onAction="#updateCargo" prefHeight="25.0" prefWidth="105.0" text="Update" />
+                  <Button fx:id="createCargoField" layoutX="76.0" layoutY="227.0" mnemonicParsing="false" onAction="#createCargo" prefHeight="25.0" prefWidth="105.0" text="Create" />
+                  <ListView fx:id="cargoList" layoutX="256.0" layoutY="13.0" prefHeight="540.0" prefWidth="509.0" />
+                  <Button layoutX="101.0" layoutY="512.0" mnemonicParsing="false" onAction="#refresh" text="Refresh" />
+               </children>
+            </AnchorPane>
+         </content>
+      </Tab>
+      <Tab fx:id="truckTab" text="Truck Management">
+         <content>
+            <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="452.0" prefWidth="600.0">
+               <children>
+                  <ListView fx:id="truckList" layoutX="256.0" layoutY="13.0" prefHeight="540.0" prefWidth="509.0" />
+                  <AnchorPane fx:id="truckPane" layoutX="14.0" layoutY="66.0" prefHeight="200.0" prefWidth="200.0">
+                     <children>
+                        <Button fx:id="viewTruckField" layoutX="66.0" layoutY="5.0" mnemonicParsing="false" onAction="#viewTruck" prefHeight="25.0" prefWidth="105.0" text="View" />
+                        <Button fx:id="deleteTruckField" layoutX="66.0" layoutY="62.0" mnemonicParsing="false" onAction="#deleteTruck" prefHeight="25.0" prefWidth="105.0" text="Delete" />
+                        <Button fx:id="updateTruckField" layoutX="66.0" layoutY="118.0" mnemonicParsing="false" onAction="#updateTruck" prefHeight="25.0" prefWidth="105.0" text="Update" />
+                        <Button fx:id="createTruckField" layoutX="66.0" layoutY="174.0" mnemonicParsing="false" onAction="#createTruck" prefHeight="25.0" prefWidth="105.0" text="Create" />
+                     </children>
+                  </AnchorPane>
+                  <Button layoutX="102.0" layoutY="512.0" mnemonicParsing="false" onAction="#refresh" text="Refresh" />
+               </children>
+            </AnchorPane>
+         </content>
+      </Tab>
+      <Tab fx:id="destinationTab" text="Destination Management">
+          <content>
+              <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                  <children>
+                      <ListView fx:id="destinationList" layoutX="192.0" layoutY="14.0" prefHeight="513.0" prefWidth="588.0" />
+                      <ChoiceBox fx:id="statusFilter" layoutX="15.0" layoutY="229.0" prefWidth="150.0" />
+                      <DatePicker fx:id="departureFilter" layoutX="8.0" layoutY="272.0" promptText="Departure date" />
+                      <Text layoutX="27.0" layoutY="268.0" strokeType="OUTSIDE" strokeWidth="0.0" />
+                      <DatePicker fx:id="arrivalFilter" layoutX="8.0" layoutY="314.0" promptText="Arrival date" />
+                      <TextField fx:id="truckerFilter" layoutX="15.0" layoutY="358.0" promptText="Trucker ID" />
+                      <Button layoutX="68.0" layoutY="400.0" mnemonicParsing="false" onAction="#filterData" text="Filter" />
+                      <Button layoutX="50.0" layoutY="444.0" mnemonicParsing="false" onAction="#removeFilters" text="Clear Filters" />
+                      <AnchorPane fx:id="destinationPane" layoutX="24.0" layoutY="14.0" prefHeight="200.0" prefWidth="80.0">
+                          <children>
+                              <Button layoutX="2.0" layoutY="57.0" mnemonicParsing="false" onAction="#createDestination" prefHeight="25.0" prefWidth="85.0" text="Insert" />
+                              <Button layoutX="2.0" layoutY="90.0" mnemonicParsing="false" onAction="#updateDestination" prefHeight="25.0" prefWidth="85.0" text="Update" />
+                              <Button layoutX="2.0" layoutY="124.0" mnemonicParsing="false" onAction="#deleteDestination" prefHeight="25.0" prefWidth="85.0" text="Delete" />
+                              <Button layoutX="2.0" layoutY="25.0" mnemonicParsing="false" onAction="#viewDestination" prefHeight="25.0" prefWidth="85.0" text="View" />
+                          </children>
+                      </AnchorPane>
+                  </children>
+              </AnchorPane>
+          </content>
+      </Tab>
+      <Tab text="Forum">
+        <content>
+          <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+               <children>
+                  <ListView fx:id="forumList" layoutX="166.0" layoutY="14.0" prefHeight="540.0" prefWidth="255.0" />
+                  <TreeView fx:id="commentTree" layoutX="436.0" layoutY="14.0" prefHeight="464.0" prefWidth="330.0" />
+                  <Button fx:id="deleteForumField" layoutX="33.0" layoutY="44.0" mnemonicParsing="false" onAction="#deleteForum" prefHeight="25.0" prefWidth="105.0" text="Delete" />
+                  <Button fx:id="updateForumField" layoutX="33.0" layoutY="93.0" mnemonicParsing="false" onAction="#updateForum" prefHeight="25.0" prefWidth="105.0" text="Update" />
+                  <Button fx:id="createForumField" layoutX="33.0" layoutY="139.0" mnemonicParsing="false" onAction="#createForum" prefHeight="25.0" prefWidth="105.0" text="Create" />
+                  <Button layoutX="58.0" layoutY="501.0" mnemonicParsing="false" onAction="#refresh" text="Refresh" />
+                  <Button layoutX="449.0" layoutY="501.0" mnemonicParsing="false" onAction="#loadComments" text="Load" />
+                  <Button layoutX="567.0" layoutY="501.0" mnemonicParsing="false" onAction="#createComment" text="Comment" />
+                  <Button layoutX="706.0" layoutY="501.0" mnemonicParsing="false" onAction="#createReply" text="Reply" />
+               </children>
+            </AnchorPane>
+        </content>
+      </Tab>
+  </tabs>
+</TabPane>

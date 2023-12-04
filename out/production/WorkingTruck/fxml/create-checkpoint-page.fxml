@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.AnchorPane?>
+
+<AnchorPane prefHeight="234.0" prefWidth="290.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="fxControllers.CreateCheckPoint">
+   <children>
+      <Button fx:id="createButton" layoutX="118.0" layoutY="157.0" mnemonicParsing="false" onAction="#createCheckPoint" text="Create" />
+      <TextField fx:id="countryField" layoutX="69.0" layoutY="50.0" promptText="Country" />
+      <TextField fx:id="addressField" layoutX="70.0" layoutY="99.0" promptText="Address" />
+   </children>
+</AnchorPane>

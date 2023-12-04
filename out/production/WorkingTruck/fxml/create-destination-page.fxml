@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.DatePicker?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.AnchorPane?>
+
+<?import javafx.scene.control.ChoiceBox?>
+<?import javafx.scene.control.ComboBox?>
+<AnchorPane prefHeight="400.0" prefWidth="322.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="fxControllers.CreateDestination">
+   <children>
+      <TextField fx:id="distanceField" layoutX="20.0" layoutY="20.0" promptText="Enter distance" />
+      <TextField fx:id="startPointField" layoutX="20.0" layoutY="57.0" promptText="Enter Start Point" />
+      <TextField fx:id="endPointField" layoutX="20.0" layoutY="92.0" promptText="Enter End Point" />
+      <Button fx:id="actionBtn" layoutX="235.0" layoutY="160.0" mnemonicParsing="false" onAction="#submit" text="Submit" />
+      <DatePicker fx:id="departureField" layoutX="20.0" layoutY="134.0" promptText="Departure date" />
+      <DatePicker fx:id="arrivalField" layoutX="20.0" layoutY="173.0" promptText="Arrival date" />
+      <ChoiceBox fx:id="statusField" layoutX="20.0" layoutY="217.0" prefWidth="150.0" />
+      <ComboBox fx:id="driverCB" layoutX="14.0" layoutY="294.0" prefWidth="150.0" />
+   </children>
+</AnchorPane>

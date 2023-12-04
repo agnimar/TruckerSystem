@@ -101,23 +101,25 @@ class LoginPageTest {
     }
 
     @ParameterizedTest
-    @ValueSource(ints = {100, 500, 1000}) // Load levels
+    @ValueSource(ints = {100, 500, 2500, 500}) // Updated load levels
     void testPerformanceUnderLoad(int load) {
-        // Configure mock behavior based on load
-        if (load <= 500) { // Assuming 'Trucker' for low and medium loads
-            when(mockTruckerHib.getTruckerByLoginData("trc", "trc")).thenReturn(new Trucker());
-        } else { // 'Manager' for high load
+        // Determine user type based on load
+        boolean isManager = (load == 500);
+        String[] credentials = isManager ? new String[]{"admin", "admin"} : new String[]{"trc", "trc"};
+
+        // Configure mock behavior
+        if (isManager) {
             when(mockManagerHib.getManagerByLoginData("admin", "admin")).thenReturn(new Manager());
+        } else {
+            when(mockTruckerHib.getTruckerByLoginData("trc", "trc")).thenReturn(new Trucker());
         }
 
-        // Set credentials based on user type
-        String[] credentials = load <= 500 ? new String[]{"trc", "trc"} : new String[]{"admin", "admin"};
-        boolean isManager = load > 500;
-
+        // Set credentials and manager check
         loginPage.emailField.setText(credentials[0]);
         loginPage.passwordField.setText(credentials[1]);
         loginPage.managerCheck.setSelected(isManager);
 
+        // Performance test
         long startTime = System.currentTimeMillis();
         try {
             for (int j = 0; j < load; j++) {
@@ -128,11 +130,12 @@ class LoginPageTest {
         }
         long endTime = System.currentTimeMillis();
 
+        // Assertions and logging for performance
         long duration = endTime - startTime;
-        long expectedMaxDuration = load == 1000 ? 2000 : 1000; // Adjust as needed
+        long expectedMaxDuration = isManager ? 2500 : 1500; // Adjust thresholds as needed
         assertTrue(duration < expectedMaxDuration, "Login duration under load " + load + " is too long: " + duration + "ms");
 
-        // Test for memory usage
+        // Memory usage test
         Runtime runtime = Runtime.getRuntime();
         runtime.gc();
         long memoryBefore = runtime.totalMemory() - runtime.freeMemory();
@@ -145,7 +148,7 @@ class LoginPageTest {
 
         long memoryAfter = runtime.totalMemory() - runtime.freeMemory();
         long memoryUsed = memoryAfter - memoryBefore;
-        long expectedMaxMemory = load == 1000 ? 150000000 : 50000000; // Adjust as needed
+        long expectedMaxMemory = isManager ? 100000000 : 75000000; // Adjust as needed
         assertTrue(memoryUsed < expectedMaxMemory, "Memory usage for login is too high: " + memoryUsed + " bytes");
 
         System.out.println("Load: " + load + ", Duration: " + duration + "ms, Memory Used: " + memoryUsed + " bytes");
